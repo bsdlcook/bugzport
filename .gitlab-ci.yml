@@ -2,7 +2,7 @@ variables:
         BINARY: $CI_PROJECT_NAME
         BUILD_DIR: "builds"
         GO111MODULE: "on"
-        CMD_DIR: "cmd/slctl/main.go"
+        CMD_DIR: "cmd/bp/main.go"
 
 .init_go: &init_go
         before_script:
