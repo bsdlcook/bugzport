@@ -24,9 +24,9 @@ go_build:
         script:
                 - mkdir $BUILD_DIR
                 - export CGO_ENABLED=0 GOOS=freebsd GOARCH=386
-                - go build -o $BUILD_DIR/$BINARY-$GOOS-$GOARCH $CMD_DIR
+                - go build -o $BUILD_DIR/$BINARY-$GOARCH $CMD_DIR
                 - export GOARCH=amd64
-                - go build -o $BUILD_DIR/$BINARY-$GOOS-$GOARCH $CMD_DIR
+                - go build -o $BUILD_DIR/$BINARY-$GOARCH $CMD_DIR
         artifacts:
                 paths:
                         - $BUILD_DIR/
