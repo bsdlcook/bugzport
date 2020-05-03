@@ -14,18 +14,18 @@ const (
 
 type SpinMessage *spinner.Spinner
 
-func SpinStart(s *spinner.Spinner) {
-	s.Start()
-}
-
-func SpinStop(s *spinner.Spinner) {
-	s.Stop()
-}
-
 func Spinner(suffix string) SpinMessage {
 	spin := spinner.New(spinner.CharSets[defaultSpinner], defaultSpinnerTime*time.Millisecond)
 	spin.Color(defaultSpinnerColor)
 	spin.Suffix = suffix
 
 	return spin
+}
+
+func SpinStart(s *spinner.Spinner) {
+	s.Start()
+}
+
+func SpinStop(s *spinner.Spinner) {
+	s.Stop()
 }

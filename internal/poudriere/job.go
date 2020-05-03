@@ -12,7 +12,15 @@ type Job struct {
 	Tree string
 }
 
-func buildStatus(j Job) utils.SpinMessage {
+func (j *Job) Run() {
+	build := buildStatus(j)
+
+	utils.SpinStart(build)
+	poudriereCmd("testport", "-j", j.Jail.Name, "-p", j.Tree, fmt.Sprintf("%s/%s", j.Port.Category, j.Port.Name)).Run()
+	utils.SpinStop(build)
+}
+
+func buildStatus(j *Job) utils.SpinMessage {
 	fmt.Print(fmt.Sprintf(`Builder environment:
 
 	Version		-- %s
@@ -26,12 +34,4 @@ func buildStatus(j Job) utils.SpinMessage {
 	buildStatus := utils.Spinner(buildMessage)
 
 	return buildStatus
-}
-
-func (j Job) Run() {
-	build := buildStatus(j)
-
-	utils.SpinStart(build)
-	poudriereCmd("testport", "-j", j.Jail.Name, "-p", j.Tree, fmt.Sprintf("%s/%s", j.Port.Category, j.Port.Name)).Run()
-	utils.SpinStop(build)
 }

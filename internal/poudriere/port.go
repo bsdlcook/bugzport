@@ -6,19 +6,17 @@ import (
 )
 
 const (
-	Github int = iota
-	Gitlab
-)
+	github int = iota
+	gitlab
 
-const (
-	UseGithub string = "USE_GITHUB"
-	UseGitlab string = "USE_GITLAB"
+	githubUse string = "USE_GITHUB"
+	gitlabUse string = "USE_GITLAB"
 
-	GithubAccount string = "GH_ACCOUNT"
-	GithubProject string = "GH_PROJECT"
+	githubAccount string = "GH_ACCOUNT"
+	githubProject string = "GH_PROJECT"
 
-	GitlabAccount string = "GL_ACCOUNT"
-	GitlabProject string = "GL_PROJECT"
+	gitlabAccount string = "GL_ACCOUNT"
+	gitlabProject string = "GL_PROJECT"
 )
 
 type RepoT struct {
@@ -36,29 +34,6 @@ type PortT struct {
 	Repo        *RepoT
 }
 
-func makeVar(dir string, value string) string {
-	cmd, _ := exec.Command("make", "-V", value, "-C", dir).Output()
-	return strings.Trim(string(cmd), "\n")
-}
-
-func repoInfo(dir string) *RepoT {
-	if makeVar(dir, UseGithub) != "" {
-		return &RepoT{
-			makeVar(dir, GithubAccount),
-			makeVar(dir, GithubProject),
-			Github,
-		}
-	} else if makeVar(dir, UseGitlab) != "" {
-		return &RepoT{
-			makeVar(dir, GitlabAccount),
-			makeVar(dir, GitlabProject),
-			Gitlab,
-		}
-	}
-
-	return &RepoT{}
-}
-
 func PortFromName(dir string) *PortT {
 	return &PortT{
 		Name:        makeVar(dir, "PORTNAME"),
@@ -68,4 +43,27 @@ func PortFromName(dir string) *PortT {
 		Maintainer:  makeVar(dir, "MAINTAINER"),
 		Repo:        repoInfo(dir),
 	}
+}
+
+func makeVar(dir string, value string) string {
+	cmd, _ := exec.Command("make", "-V", value, "-C", dir).Output()
+	return strings.Trim(string(cmd), "\n")
+}
+
+func repoInfo(dir string) *RepoT {
+	if makeVar(dir, githubUse) != "" {
+		return &RepoT{
+			makeVar(dir, githubAccount),
+			makeVar(dir, githubProject),
+			github,
+		}
+	} else if makeVar(dir, gitlabUse) != "" {
+		return &RepoT{
+			makeVar(dir, gitlabAccount),
+			makeVar(dir, gitlabProject),
+			gitlab,
+		}
+	}
+
+	return &RepoT{}
 }

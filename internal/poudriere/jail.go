@@ -13,6 +13,19 @@ type JailT struct {
 	FS      string
 }
 
+func JailFromName(jail string) *JailT {
+	info := readJail(jail)
+
+	return &JailT{
+		Name:    info["name"],
+		Version: info["version"],
+		Arch:    info["arch"],
+		Method:  info["method"],
+		Mount:   info["mount"],
+		FS:      info["fs"],
+	}
+}
+
 func readJail(jail string) map[string]string {
 	out, _ := poudriereCmd("jail", "-j", jail, "-i").Output()
 	info := make(map[string]string)
@@ -29,17 +42,4 @@ func readJail(jail string) map[string]string {
 	}
 
 	return info
-}
-
-func JailFromName(jail string) *JailT {
-	info := readJail(jail)
-
-	return &JailT{
-		Name:    info["name"],
-		Version: info["version"],
-		Arch:    info["arch"],
-		Method:  info["method"],
-		Mount:   info["mount"],
-		FS:      info["fs"],
-	}
 }

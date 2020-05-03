@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	configName = "bugz.yml"
-	configDir  = "bugzport"
+	defaultConfigName = "bugz.yml"
+	defaultConfigDir  = "bugzport"
 )
 
 type Config struct {
@@ -20,13 +20,22 @@ type Config struct {
 	Tree string `yaml:"tree"`
 }
 
-func Dir() string {
-	dir, _ := homedir.Expand("~/.config/" + configDir)
+func ParseConfig(name string) (Config, error) {
+	config, err := parseConfigFile(name)
+	if err != nil {
+		return Config{}, nil
+	}
+
+	return config, nil
+}
+
+func dirPath() string {
+	dir, _ := homedir.Expand("~/.config/" + defaultConfigDir)
 	return dir
 }
 
-func File() string {
-	return path.Join(Dir(), configName)
+func filePath() string {
+	return path.Join(dirPath(), defaultConfigName)
 }
 
 func readConfigFile(name string) ([]byte, error) {
@@ -58,13 +67,4 @@ func parseConfigFile(name string) (Config, error) {
 	}
 
 	return config, err
-}
-
-func ParseConfig(name string) (Config, error) {
-	config, err := parseConfigFile(name)
-	if err != nil {
-		return Config{}, nil
-	}
-
-	return config, nil
 }
