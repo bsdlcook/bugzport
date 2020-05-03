@@ -13,12 +13,14 @@ type Job struct {
 }
 
 var buildStatus = func(j Job) utils.SpinMessage {
-	infoMessage := "Builder environment:\n" +
-		"\n\tVersion\t\t-- " + j.Jail.Version +
-		"\n\tArch\t\t-- " + j.Jail.Arch +
-		"\n\tMethod\t\t-- " + j.Jail.Method +
-		"\n\tMount\t\t-- " + j.Jail.Mount + "\n\n"
-	fmt.Print(infoMessage)
+	fmt.Print(fmt.Sprintf(`Builder environment:
+
+	Version		-- %s
+	Arch		-- %s
+	Method		-- %s
+	Mount		-- %s
+
+`, j.Jail.Version, j.Jail.Arch, j.Jail.Method, j.Jail.Mount))
 
 	buildMessage := fmt.Sprintf(" Building package %s/%s @ %s <%s>", j.Port.Category, j.Port.Name, j.Port.Version, j.Port.Maintainer)
 	buildStatus := utils.Spinner(buildMessage)
