@@ -41,9 +41,9 @@ var buildCmd = &cobra.Command{
 		port := poudriere.PortFromName(dirName + portName)
 
 		job := poudriere.Job{
-			jail,
-			port,
-			tree,
+			Jail: jail,
+			Port: port,
+			Tree: tree,
 		}
 
 		job.Run()

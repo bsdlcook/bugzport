@@ -2,8 +2,9 @@ package poudriere
 
 import (
 	"fmt"
-	"github.com/briandowns/spinner"
 	"time"
+
+	"github.com/briandowns/spinner"
 )
 
 type Job struct {
@@ -12,13 +13,13 @@ type Job struct {
 	Tree string
 }
 
-var StatusBegin = func(job Job) *spinner.Spinner {
-	infoMsg := "Builder enviroment:\n" +
-		"\n\tVersion\t\t-- " + job.Jail.Version +
-		"\n\tArch\t\t-- " + job.Jail.Arch +
-		"\n\tMethod\t\t-- " + job.Jail.Method +
-		"\n\tMount\t\t-- " + job.Jail.Mount + "\n\n"
-	statusMsg := fmt.Sprintf(" Building package %s/%s @ %s <%s>", job.Port.Category, job.Port.Name, job.Port.Version, job.Port.Maintainer)
+var StatusBegin = func(j Job) *spinner.Spinner {
+	infoMsg := "Builder environment:\n" +
+		"\n\tVersion\t\t-- " + j.Jail.Version +
+		"\n\tArch\t\t-- " + j.Jail.Arch +
+		"\n\tMethod\t\t-- " + j.Jail.Method +
+		"\n\tMount\t\t-- " + j.Jail.Mount + "\n\n"
+	statusMsg := fmt.Sprintf(" Building package %s/%s @ %s <%s>", j.Port.Category, j.Port.Name, j.Port.Version, j.Port.Maintainer)
 
 	fmt.Print(infoMsg)
 	buildStatus := spinner.New(spinner.CharSets[11], 120*time.Millisecond)
@@ -29,8 +30,8 @@ var StatusBegin = func(job Job) *spinner.Spinner {
 	return buildStatus
 }
 
-func (job Job) Run() {
-	status := StatusBegin(job)
-	PoudriereCmd("testport", "-j", job.Jail.Name, "-p", job.Tree, fmt.Sprintf("%s/%s", job.Port.Category, job.Port.Name)).Run()
+func (j Job) Run() {
+	status := StatusBegin(j)
+	PoudriereCmd("testport", "-j", j.Jail.Name, "-p", j.Tree, fmt.Sprintf("%s/%s", j.Port.Category, j.Port.Name)).Run()
 	status.Stop()
 }

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gitlab.com/lcook/bugzport/command"
 	"os"
+
+	"gitlab.com/lcook/bugzport/command"
 )
 
 func main() {

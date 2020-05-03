@@ -1,11 +1,12 @@
 package config
 
 import (
-	"github.com/mitchellh/go-homedir"
-	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
 	"path"
+
+	"github.com/mitchellh/go-homedir"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -19,13 +20,13 @@ type Config struct {
 	Tree string `yaml:"tree"`
 }
 
-func ConfigDir() string {
+func Dir() string {
 	dir, _ := homedir.Expand("~/.config/" + configDir)
 	return dir
 }
 
-func ConfigFile() string {
-	return path.Join(ConfigDir(), configName)
+func File() string {
+	return path.Join(Dir(), configName)
 }
 
 var ReadConfigFile = func(name string) ([]byte, error) {
