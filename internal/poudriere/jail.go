@@ -1,6 +1,7 @@
 package poudriere
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -13,8 +14,11 @@ type JailT struct {
 	FS      string
 }
 
-func JailFromName(jail string) *JailT {
-	info := readJail(jail)
+func JailFromName(jail string) (*JailT, error) {
+	info, err := readJail(jail)
+	if err != nil {
+		return &JailT{}, err
+	}
 
 	return &JailT{
 		Name:    info["name"],
@@ -23,11 +27,16 @@ func JailFromName(jail string) *JailT {
 		Method:  info["method"],
 		Mount:   info["mount"],
 		FS:      info["fs"],
-	}
+	}, nil
 }
 
-func readJail(jail string) map[string]string {
-	out, _ := poudriereCmd("jail", "-j", jail, "-i").Output()
+func readJail(jail string) (map[string]string, error) {
+	out, err := poudriereCmd("jail", "-j", jail, "-i").Output()
+
+	if err != nil {
+		return nil, fmt.Errorf("Couldn't read jail '%s' information from Poudriere. Is the the jail name correct?", jail)
+	}
+
 	info := make(map[string]string)
 
 	for _, line := range strings.Split(string(out), "\n") {
@@ -41,5 +50,5 @@ func readJail(jail string) map[string]string {
 		info[value[0]] = strings.TrimSpace(value[1])
 	}
 
-	return info
+	return info, nil
 }

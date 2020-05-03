@@ -1,6 +1,8 @@
 package poudriere
 
 import (
+	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -34,7 +36,13 @@ type PortT struct {
 	Repo        *RepoT
 }
 
-func PortFromName(dir string) *PortT {
+func PortFromName(dir string) (*PortT, error) {
+	valid := isPort(dir)
+
+	if valid != nil {
+		return &PortT{}, valid
+	}
+
 	return &PortT{
 		Name:        makeVar(dir, "PORTNAME"),
 		Version:     makeVar(dir, "PORTVERSION"),
@@ -42,7 +50,15 @@ func PortFromName(dir string) *PortT {
 		Category:    makeVar(dir, "CATEGORIES"),
 		Maintainer:  makeVar(dir, "MAINTAINER"),
 		Repo:        repoInfo(dir),
+	}, nil
+}
+
+func isPort(dir string) error {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		return fmt.Errorf("'%s' is not a valid port to build", dir)
 	}
+
+	return nil
 }
 
 func makeVar(dir string, value string) string {

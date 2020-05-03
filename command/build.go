@@ -37,8 +37,15 @@ var buildCmd = &cobra.Command{
 			return err
 		}
 
-		jail := poudriere.JailFromName(jailName)
-		port := poudriere.PortFromName(dirName + portName)
+		jail, err := poudriere.JailFromName(jailName)
+		if err != nil {
+			return err
+		}
+
+		port, err := poudriere.PortFromName(dirName + portName)
+		if err != nil {
+			return err
+		}
 
 		job := poudriere.Job{
 			Jail: jail,
