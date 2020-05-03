@@ -12,7 +12,7 @@ type Job struct {
 	Tree string
 }
 
-var buildStatus = func(j Job) utils.SpinMessage {
+func buildStatus(j Job) utils.SpinMessage {
 	fmt.Print(fmt.Sprintf(`Builder environment:
 
 	Version		-- %s
@@ -32,6 +32,6 @@ func (j Job) Run() {
 	build := buildStatus(j)
 
 	utils.SpinStart(build)
-	PoudriereCmd("testport", "-j", j.Jail.Name, "-p", j.Tree, fmt.Sprintf("%s/%s", j.Port.Category, j.Port.Name)).Run()
+	poudriereCmd("testport", "-j", j.Jail.Name, "-p", j.Tree, fmt.Sprintf("%s/%s", j.Port.Category, j.Port.Name)).Run()
 	utils.SpinStop(build)
 }

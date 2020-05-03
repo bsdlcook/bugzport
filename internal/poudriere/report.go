@@ -9,7 +9,7 @@ func GenerateReport(port *PortT) string {
 		" * " + Changelog(port) + "\n\n" +
 		"Tested:\n" +
 		" * portlint: OK (looks fine).\n" +
-		" * testport: OK (poudriere: " + PoudriereVersion() + ")."
+		" * testport: OK (poudriere: " + poudriereVersion() + ")."
 
 	return report
 }

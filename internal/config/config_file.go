@@ -29,7 +29,7 @@ func File() string {
 	return path.Join(Dir(), configName)
 }
 
-var ReadConfigFile = func(name string) ([]byte, error) {
+func readConfigFile(name string) ([]byte, error) {
 	file, err := os.Open(name)
 	if err != nil {
 		return nil, err
@@ -44,14 +44,15 @@ var ReadConfigFile = func(name string) ([]byte, error) {
 	return data, nil
 }
 
-func ParseConfigFile(name string) (Config, error) {
-	data, err := ReadConfigFile(name)
+func parseConfigFile(name string) (Config, error) {
+	data, err := readConfigFile(name)
 	if err != nil {
 		return Config{}, err
 	}
 
 	var config Config
 	err = yaml.Unmarshal(data, &config)
+
 	if err != nil {
 		return Config{}, err
 	}
@@ -60,7 +61,7 @@ func ParseConfigFile(name string) (Config, error) {
 }
 
 func ParseConfig(name string) (Config, error) {
-	config, err := ParseConfigFile(name)
+	config, err := parseConfigFile(name)
 	if err != nil {
 		return Config{}, nil
 	}

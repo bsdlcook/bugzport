@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-var PoudriereCmd = func(args ...string) *exec.Cmd {
+func poudriereCmd(args ...string) *exec.Cmd {
 	return exec.Command("poudriere", args...)
 }
 
-var PoudriereVersion = func() string {
-	out, _ := PoudriereCmd("version").Output()
+func poudriereVersion() string {
+	out, _ := poudriereCmd("version").Output()
 	return strings.Trim(string(out), "\n")
 }

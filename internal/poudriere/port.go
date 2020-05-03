@@ -36,22 +36,22 @@ type PortT struct {
 	Repo        *RepoT
 }
 
-var MakeVar = func(dir string, value string) string {
+func makeVar(dir string, value string) string {
 	cmd, _ := exec.Command("make", "-V", value, "-C", dir).Output()
 	return strings.Trim(string(cmd), "\n")
 }
 
-var RepoInfo = func(dir string) *RepoT {
-	if MakeVar(dir, UseGithub) != "" {
+func repoInfo(dir string) *RepoT {
+	if makeVar(dir, UseGithub) != "" {
 		return &RepoT{
-			MakeVar(dir, GithubAccount),
-			MakeVar(dir, GithubProject),
+			makeVar(dir, GithubAccount),
+			makeVar(dir, GithubProject),
 			Github,
 		}
-	} else if MakeVar(dir, UseGitlab) != "" {
+	} else if makeVar(dir, UseGitlab) != "" {
 		return &RepoT{
-			MakeVar(dir, GitlabAccount),
-			MakeVar(dir, GitlabProject),
+			makeVar(dir, GitlabAccount),
+			makeVar(dir, GitlabProject),
 			Gitlab,
 		}
 	}
@@ -61,11 +61,11 @@ var RepoInfo = func(dir string) *RepoT {
 
 func PortFromName(dir string) *PortT {
 	return &PortT{
-		Name:        MakeVar(dir, "PORTNAME"),
-		Version:     MakeVar(dir, "PORTVERSION"),
-		DistVersion: MakeVar(dir, "DISTVERSIONFULL"),
-		Category:    MakeVar(dir, "CATEGORIES"),
-		Maintainer:  MakeVar(dir, "MAINTAINER"),
-		Repo:        RepoInfo(dir),
+		Name:        makeVar(dir, "PORTNAME"),
+		Version:     makeVar(dir, "PORTVERSION"),
+		DistVersion: makeVar(dir, "DISTVERSIONFULL"),
+		Category:    makeVar(dir, "CATEGORIES"),
+		Maintainer:  makeVar(dir, "MAINTAINER"),
+		Repo:        repoInfo(dir),
 	}
 }
