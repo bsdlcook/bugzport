@@ -1,6 +1,8 @@
 package command
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"gitlab.com/lcook/bugzport/internal/config"
 	"gitlab.com/lcook/bugzport/internal/poudriere"
@@ -16,10 +18,20 @@ func init() {
 }
 
 var buildCmd = &cobra.Command{
-	Use: "build <category/name> [flags]",
-	//Short: "",
-	//Long:  "",
-	Args: cobra.MinimumNArgs(1),
+	Use:   "build <category/name> [flags]",
+	Short: "Queue a port for a build in Poudriere.",
+	Long: `Queue port for a build in Poudriere, generate a report and diff of the changes made.
+
+Examples:
+  $ bp build audio/spotify-tui -j builder-amd64-121-rel -d /path/to/ports -t default
+`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 {
+			cmd.Help()
+			return fmt.Errorf("Port is required as argument: <category/name>")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		portName := args[0]
 		dirName, err := cmd.Flags().GetString("dir")
