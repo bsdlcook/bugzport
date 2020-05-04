@@ -36,6 +36,10 @@ type PortT struct {
 	Repo        *RepoT
 }
 
+func (p *PortT) FullName() string {
+	return fmt.Sprintf("%s/%s", p.Category, p.Name)
+}
+
 func PortFromName(dir string) (*PortT, error) {
 	valid := isPort(dir)
 
