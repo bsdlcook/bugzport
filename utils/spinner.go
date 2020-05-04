@@ -15,8 +15,7 @@ const (
 type SpinMessage *spinner.Spinner
 
 func Spinner(suffix string) SpinMessage {
-	return spinner.New(spinner.CharSets[defaultSpinner], defaultSpinnerTime*time.Millisecond, spinner.WithHiddenCursor(true),
-		spinner.WithSuffix(suffix), spinner.WithColor(defaultSpinnerColor))
+	return spinner.New(spinner.CharSets[defaultSpinner], defaultSpinnerTime*time.Millisecond, spinner.WithSuffix(suffix), spinner.WithColor(defaultSpinnerColor))
 }
 
 func SpinStart(s *spinner.Spinner) {
