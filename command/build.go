@@ -60,9 +60,10 @@ Examples:
 		}
 
 		job := poudriere.Job{
-			Jail: jail,
-			Port: port,
-			Tree: tree,
+			Jail:    jail,
+			Port:    port,
+			Tree:    tree,
+			WorkDir: dirName,
 		}
 
 		job.Run()

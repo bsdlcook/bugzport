@@ -1,18 +1,38 @@
 package poudriere
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
-func GenerateReport(p *PortT) string {
-	report := fmt.Sprintf(`
+const (
+	defaultReportDir  string = ".report"
+	defaultReportFile string = "summary"
+)
+
+func WriteReport(j *Job) {
+	reportDir := fmt.Sprintf("%s%s/%s-%s/", j.WorkDir, defaultReportDir, j.Port.Name, j.Port.Version)
+
+	os.MkdirAll(reportDir, os.ModePerm)
+	file, _ := os.Create(reportDir + defaultReportFile)
+	
+	defer file.Close()
+
+	file.WriteString(generateReport(j.Port))
+}
+
+func generateReport(p *PortT) string {
+	report := fmt.Sprintf(`%s: Update to %s
+
 Amended:
  * Bumped DISTVERSION to %s and updated distinfo.
 
 Changelog:
  * %s
 
- Tested:
-  * portlint: OK (looks fine).
-  * testport: OK (poudriere: %s).`, p.Version, changelog(p), poudriereVersion())
+Tested:
+ * portlint: OK (looks fine).
+ * testport: OK (poudriere: %s).`, p.FullName(), p.Version, p.Version, changelog(p), poudriereVersion())
 
 	return report
 }
