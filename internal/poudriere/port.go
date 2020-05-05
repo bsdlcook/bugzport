@@ -42,7 +42,7 @@ type PortT struct {
 	Category    string
 	Maintainer  string
 	Repo        *RepoT
-	Use         int
+	Uses         int
 }
 
 func (p *PortT) FullName() string {
@@ -63,7 +63,7 @@ func PortFromName(dir string) (*PortT, error) {
 		Category:    makeVar(dir, "CATEGORIES"),
 		Maintainer:  makeVar(dir, "MAINTAINER"),
 		Repo:        repoInfo(dir),
-		Use:         useInfo(dir),
+		Uses:         usesInfo(dir),
 	}, nil
 }
 
@@ -98,7 +98,7 @@ func repoInfo(dir string) *RepoT {
 	return &RepoT{}
 }
 
-func useInfo(dir string) int {
+func usesInfo(dir string) int {
 	uses := makeVar(dir, "USES")
 
 	for _, use := range strings.Fields(uses) {
