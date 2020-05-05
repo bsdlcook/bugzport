@@ -28,7 +28,7 @@ func (j *Job) Run() {
 }
 
 func copyLog(j *Job) {
-	source := fmt.Sprintf("%s/latest/logs/%s-%s.log", j.Jail.LogDir, j.Port.Name, j.Port.Version)
+	source := fmt.Sprintf("%s/latest/logs/%s-%s.log", j.Jail.Path.LogDir, j.Port.Name, j.Port.Version)
 	dest := fmt.Sprintf("%s%s/%s-%s/%s-%s.log", j.WorkDir, defaultReportDir, j.Port.Name, j.Port.Version, j.Port.Name, j.Port.Version)
 
 	utils.CopyFile(source, dest)
