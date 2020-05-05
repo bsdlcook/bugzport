@@ -21,6 +21,14 @@ const (
 	gitlabProject string = "GL_PROJECT"
 )
 
+const (
+	gomod int = iota
+	cargo
+
+	gomodUse = "go:modules"
+	cargoUse = "cargo"
+)
+
 type RepoT struct {
 	Account string
 	Project string
@@ -34,6 +42,7 @@ type PortT struct {
 	Category    string
 	Maintainer  string
 	Repo        *RepoT
+	Use         int
 }
 
 func (p *PortT) FullName() string {
@@ -54,6 +63,7 @@ func PortFromName(dir string) (*PortT, error) {
 		Category:    makeVar(dir, "CATEGORIES"),
 		Maintainer:  makeVar(dir, "MAINTAINER"),
 		Repo:        repoInfo(dir),
+		Use:         useInfo(dir),
 	}, nil
 }
 
@@ -86,4 +96,19 @@ func repoInfo(dir string) *RepoT {
 	}
 
 	return &RepoT{}
+}
+
+func useInfo(dir string) int {
+	uses := makeVar(dir, "USES")
+
+	for _, use := range strings.Fields(uses) {
+		switch use {
+		case gomodUse:
+			return gomod
+		case cargoUse:
+			return cargo
+		}
+	}
+
+	return -1
 }
