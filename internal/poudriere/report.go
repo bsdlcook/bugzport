@@ -52,9 +52,9 @@ func changelog(p *PortT) string {
 func uses(p *PortT) string {
 	switch p.Uses {
 	case gomod:
-		return "* Updated *_TUPLE dependeny list."
+		return "* Updated *_TUPLE dependency list."
 	case cargo:
-		return "* Updated CARGO_CRATES dependeny list."
+		return "* Updated CARGO_CRATES dependency list."
 	default:
 		return ""
 	}
