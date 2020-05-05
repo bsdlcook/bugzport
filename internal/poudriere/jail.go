@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+type PathT struct {
+	LogDir     string
+	CacheDir   string
+	ImageDir   string
+	PackageDir string
+	WorkDir    string
+}
+
 type JailT struct {
 	Name    string
 	Version string
@@ -12,12 +20,21 @@ type JailT struct {
 	Method  string
 	Mount   string
 	FS      string
+	Path    *PathT
 }
 
-func JailFromName(jail string) (*JailT, error) {
+func JailFromName(jail string, tree string) (*JailT, error) {
 	info, err := readJail(jail)
 	if err != nil {
 		return &JailT{}, err
+	}
+
+	paths := &PathT{
+		LogDir:     getPath(poudriereLogDir, info, tree),
+		CacheDir:   getPath(poudriereCacheDir, info, tree),
+		ImageDir:   getPath(poudriereImageDir, info, tree),
+		PackageDir: getPath(poudrierePackageDir, info, tree),
+		WorkDir:    getPath(poudriereWorkDir, info, tree),
 	}
 
 	return &JailT{
@@ -27,6 +44,7 @@ func JailFromName(jail string) (*JailT, error) {
 		Method:  info["method"],
 		Mount:   info["mount"],
 		FS:      info["fs"],
+		Path:    paths,
 	}, nil
 }
 
@@ -51,4 +69,8 @@ func readJail(jail string) (map[string]string, error) {
 	}
 
 	return info, nil
+}
+
+func getPath(path string, info map[string]string, tree string) string {
+	return fmt.Sprintf("%s/%s-%s", path, info["name"], tree)
 }

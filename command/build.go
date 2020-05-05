@@ -49,7 +49,7 @@ Examples:
 			return err
 		}
 
-		jail, err := poudriere.JailFromName(jailName)
+		jail, err := poudriere.JailFromName(jailName, tree)
 		if err != nil {
 			return err
 		}
