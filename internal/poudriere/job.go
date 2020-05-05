@@ -25,7 +25,7 @@ func (j *Job) Run() {
 	WriteReport(j)
 	svn.WritePatch()
 
-	utils.CopyFile(portLogFile(), reportLogFile())
+	utils.CopyFile(portLogFile(j), reportLogFile(j))
 }
 
 func buildStatus(j *Job) utils.SpinMessage {
