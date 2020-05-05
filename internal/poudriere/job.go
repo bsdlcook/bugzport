@@ -24,14 +24,8 @@ func (j *Job) Run() {
 
 	WriteReport(j)
 	svn.WritePatch()
-	copyLog(j)
-}
 
-func copyLog(j *Job) {
-	source := fmt.Sprintf("%s/latest/logs/%s-%s.log", j.Jail.Path.LogDir, j.Port.Name, j.Port.Version)
-	dest := fmt.Sprintf("%s%s/%s-%s/%s-%s.log", j.WorkDir, defaultReportDir, j.Port.Name, j.Port.Version, j.Port.Name, j.Port.Version)
-
-	utils.CopyFile(source, dest)
+	utils.CopyFile(portLogFile(), reportLogFile())
 }
 
 func buildStatus(j *Job) utils.SpinMessage {
@@ -48,4 +42,12 @@ func buildStatus(j *Job) utils.SpinMessage {
 	buildStatus := utils.Spinner(buildMessage)
 
 	return buildStatus
+}
+
+func portLogFile(j *Job) string {
+	return fmt.Sprintf("%s/latest/logs/%s-%s.log", j.Jail.Path.LogDir, j.Port.Name, j.Port.Version)
+}
+
+func reportLogFile(j *Job) string {
+	return fmt.Sprintf("%s%s/%s-%s/%s-%s.log", j.WorkDir, defaultReportDir, j.Port.Name, j.Port.Version, j.Port.Name, j.Port.Version)
 }
