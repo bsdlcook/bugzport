@@ -9,11 +9,11 @@ const (
 	poudrierePrefix  string = "/usr/local/poudriere"
 	poudriereDataDir string = poudrierePrefix + "/data"
 
-	poudriereLogDir     string = poudriereDataDir + "/logs"
+	poudriereLogDir     string = poudriereDataDir + "/logs/bulk"
 	poudriereCacheDir   string = poudriereDataDir + "/cache"
 	poudriereImageDir   string = poudriereDataDir + "/images"
 	poudrierePackageDir string = poudriereDataDir + "/packages"
-	poudriereWorkDir    string = poudriereDataDir + "/workdirs"
+	poudriereWorkDir    string = poudriereDataDir + "/wrkdirs"
 )
 
 func poudriereCmd(args ...string) *exec.Cmd {
