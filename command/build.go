@@ -35,39 +35,54 @@ Examples:
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		portName := args[0]
-
-		dirName, _ := cmd.Flags().GetString("dir")
-		jailName, _ := cmd.Flags().GetString("jail")
-
-		tree, _ := cmd.Flags().GetString("tree")
-		output, _ := cmd.Flags().GetBool("output")
-		report, _ := cmd.Flags().GetBool("report")
-
-		jail, err := poudriere.JailFromName(jailName, tree)
+		buildJob, err := poudriereJob(cmd, args)
 		if err != nil {
 			return err
 		}
 
-		port, err := poudriere.PortFromName(dirName + portName)
-		if err != nil {
-			return err
-		}
-
-		options := &poudriere.OptionsT{
-			Output: output,
-			Report: report,
-		}
-
-		job := poudriere.Job{
-			Jail:    jail,
-			Port:    port,
-			Tree:    tree,
-			WorkDir: dirName,
-			Options: options,
-		}
-
-		job.Run()
+		buildJob.Run()
 		return nil
 	},
+}
+
+func poudriereJob(cmd *cobra.Command, args []string) (poudriere.Job, error) {
+	portName := args[0]
+	dirName := getString(cmd, "dir")
+	jailName := getString(cmd, "jail")
+	treeName := getString(cmd, "tree")
+
+	jail, err := poudriere.JailFromName(jailName, treeName)
+	if err != nil {
+		return poudriere.Job{}, err
+	}
+
+	port, err := poudriere.PortFromName(dirName + portName)
+	if err != nil {
+		return poudriere.Job{}, err
+	}
+
+	output := getBool(cmd, "output")
+	report := getBool(cmd, "report")
+	options := &poudriere.OptionsT{
+		Output: output,
+		Report: report,
+	}
+
+	return poudriere.Job{
+		Jail:    jail,
+		Port:    port,
+		Tree:    treeName,
+		WorkDir: dirName,
+		Options: options,
+	}, nil
+}
+
+func getBool(cmd *cobra.Command, value string) bool {
+	val, _ := cmd.Flags().GetBool(value)
+	return val
+}
+
+func getString(cmd *cobra.Command, value string) string {
+	val, _ := cmd.Flags().GetString(value)
+	return val
 }
