@@ -15,6 +15,8 @@ func init() {
 	buildCmd.Flags().StringP("dir", "d", cfg.Dir, "Target ports directory")
 	buildCmd.Flags().StringP("jail", "j", cfg.Jail, "Target jail")
 	buildCmd.Flags().StringP("tree", "t", cfg.Tree, "Target ports tree")
+	buildCmd.Flags().BoolP("report", "r", false, "Generate a report once finished building")
+	buildCmd.Flags().BoolP("output", "o", false, "Show running output of Poudriere build process")
 }
 
 var buildCmd = &cobra.Command{
@@ -34,20 +36,13 @@ Examples:
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		portName := args[0]
-		dirName, err := cmd.Flags().GetString("dir")
-		if err != nil {
-			return err
-		}
 
-		jailName, err := cmd.Flags().GetString("jail")
-		if err != nil {
-			return err
-		}
+		dirName, _ := cmd.Flags().GetString("dir")
+		jailName, _ := cmd.Flags().GetString("jail")
 
-		tree, err := cmd.Flags().GetString("tree")
-		if err != nil {
-			return err
-		}
+		tree, _ := cmd.Flags().GetString("tree")
+		output, _ := cmd.Flags().GetBool("output")
+		report, _ := cmd.Flags().GetBool("report")
 
 		jail, err := poudriere.JailFromName(jailName, tree)
 		if err != nil {
@@ -59,11 +54,17 @@ Examples:
 			return err
 		}
 
+		options := &poudriere.OptionsT{
+			Output: output,
+			Report: report,
+		}
+
 		job := poudriere.Job{
 			Jail:    jail,
 			Port:    port,
 			Tree:    tree,
 			WorkDir: dirName,
+			Options: options,
 		}
 
 		job.Run()

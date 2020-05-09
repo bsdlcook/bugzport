@@ -2,16 +2,23 @@ package poudriere
 
 import (
 	"fmt"
+	"io/ioutil"
 
 	"gitlab.com/lcook/bugzport/internal/svn"
 	"gitlab.com/lcook/bugzport/utils"
 )
+
+type OptionsT struct {
+	Output bool
+	Report bool
+}
 
 type Job struct {
 	Jail    *JailT
 	Port    *PortT
 	Tree    string
 	WorkDir string
+	Options *OptionsT
 }
 
 func (j *Job) Run() {
@@ -19,13 +26,14 @@ func (j *Job) Run() {
 	build := buildStatus(j)
 
 	utils.SpinStart(build)
-	poudriereCmd("testport", "-j", j.Jail.Name, "-p", j.Tree, fmt.Sprintf("%s/%s", j.Port.Category, j.Port.Name)).Run()
+	poudriereCmd(j.Options.Output, "testport", "-j", j.Jail.Name, "-p", j.Tree, j.Port.FullName()).Run()
 	utils.SpinStop(build)
 
-	WriteReport(j)
-	svn.WritePatch()
-
-	utils.CopyFile(portLogFile(j), reportLogFile(j))
+	if j.Options.Report {
+		WriteReport(j)
+		svn.WritePatch()
+		utils.CopyFile(portLogFile(j), reportLogFile(j))
+	}
 }
 
 func buildStatus(j *Job) utils.SpinMessage {
@@ -40,6 +48,10 @@ func buildStatus(j *Job) utils.SpinMessage {
 
 	buildMessage := fmt.Sprintf(" Building package %s/%s @ %s <%s>", j.Port.Category, j.Port.Name, j.Port.Version, j.Port.Maintainer)
 	buildStatus := utils.Spinner(buildMessage)
+
+	if j.Options.Output {
+		buildStatus.Writer = ioutil.Discard
+	}
 
 	return buildStatus
 }

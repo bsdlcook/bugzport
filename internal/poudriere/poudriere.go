@@ -1,6 +1,8 @@
 package poudriere
 
 import (
+	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -16,11 +18,20 @@ const (
 	poudriereWorkDir    string = poudriereDataDir + "/wrkdirs"
 )
 
-func poudriereCmd(args ...string) *exec.Cmd {
-	return exec.Command("poudriere", args...)
+func poudriereCmd(output bool, args ...string) *exec.Cmd {
+	cmd := exec.Command("poudriere", args...)
+
+	if output {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		fmt.Println(cmd.Stdout)
+	}
+
+	return cmd
 }
 
 func poudriereVersion() string {
-	out, _ := poudriereCmd("version").Output()
+	out, _ := poudriereCmd(false, "version").Output()
 	return strings.Trim(string(out), "\n")
 }
