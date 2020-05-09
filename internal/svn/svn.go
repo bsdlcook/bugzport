@@ -4,15 +4,15 @@ import (
 	"os/exec"
 )
 
-type SVNInfo struct {
+type SvnInfo struct {
 	PortName    string
 	PortPath    string
 	PortVersion string
 	WorkDir     string
 }
 
-func New(port string, path string, version string, dir string) *SVNInfo {
-	return &SVNInfo{
+func New(port string, path string, version string, dir string) *SvnInfo {
+	return &SvnInfo{
 		PortName:    port,
 		PortPath:    path,
 		PortVersion: version,
