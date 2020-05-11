@@ -3,14 +3,16 @@ package poudriere
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"gitlab.com/lcook/bugzport/internal/svn"
 	"gitlab.com/lcook/bugzport/utils"
 )
 
 type OptionsT struct {
-	Output bool
-	Report bool
+	Output      bool
+	Report      bool
+	Interactive bool
 }
 
 type Job struct {
@@ -24,9 +26,28 @@ type Job struct {
 func (j *Job) Run() {
 	svn := svn.New(j.Port.Name, j.Port.FullName(), j.Port.Version, j.WorkDir)
 	build := buildStatus(j)
+	buildFlags := []string{"-j", j.Jail.Name, "-p", j.Tree, j.Port.FullName()}
+
+	switch {
+	case j.Options.Interactive:
+		buildFlags = append([]string{"-i"}, buildFlags...)
+		fallthrough
+	default:
+		buildFlags = append([]string{"testport"}, buildFlags...)
+	}
+
+	cmd := poudriereCmd(buildFlags)
+
+	if j.Options.Output || j.Options.Interactive {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if j.Options.Interactive {
+			cmd.Stdin = os.Stdin
+		}
+	}
 
 	utils.SpinStart(build)
-	poudriereCmd(j.Options.Output, "testport", "-j", j.Jail.Name, "-p", j.Tree, j.Port.FullName()).Run()
+	cmd.Run()
 	utils.SpinStop(build)
 
 	if j.Options.Report {
@@ -49,7 +70,7 @@ func buildStatus(j *Job) utils.SpinMessage {
 	buildMessage := fmt.Sprintf(" Building package %s/%s @ %s <%s>", j.Port.Category, j.Port.Name, j.Port.Version, j.Port.Maintainer)
 	buildStatus := utils.Spinner(buildMessage)
 
-	if j.Options.Output {
+	if j.Options.Output || j.Options.Interactive {
 		buildStatus.Writer = ioutil.Discard
 	}
 

@@ -49,7 +49,7 @@ func JailFromName(jail string, tree string) (*JailT, error) {
 }
 
 func readJail(jail string) (map[string]string, error) {
-	out, err := poudriereCmd(false, "jail", "-j", jail, "-i").Output()
+	out, err := poudriereCmd([]string{"jail", "-j", jail, "-i"}).Output()
 
 	if err != nil {
 		return nil, fmt.Errorf("no such jail '%s' found in Poudriere. Is the jail name correct?", jail)
