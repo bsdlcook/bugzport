@@ -13,6 +13,7 @@ type OptionsT struct {
 	Output      bool
 	Report      bool
 	Interactive bool
+	Config      bool
 }
 
 type Job struct {
@@ -32,13 +33,16 @@ func (j *Job) Run() {
 	case j.Options.Interactive:
 		buildFlags = append([]string{"-i"}, buildFlags...)
 		fallthrough
+	case j.Options.Config:
+		buildFlags = append([]string{"-c"}, buildFlags...)
+		fallthrough
 	default:
 		buildFlags = append([]string{"testport"}, buildFlags...)
 	}
 
 	cmd := poudriereCmd(buildFlags)
 
-	if j.Options.Output || j.Options.Interactive {
+	if j.Options.Output || j.Options.Interactive || j.Options.Config {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		if j.Options.Interactive {
@@ -70,7 +74,7 @@ func buildStatus(j *Job) utils.SpinMessage {
 	buildMessage := fmt.Sprintf(" Building package %s/%s @ %s <%s>", j.Port.Category, j.Port.Name, j.Port.Version, j.Port.Maintainer)
 	buildStatus := utils.Spinner(buildMessage)
 
-	if j.Options.Output || j.Options.Interactive {
+	if j.Options.Output || j.Options.Interactive || j.Options.Config {
 		buildStatus.Writer = ioutil.Discard
 	}
 

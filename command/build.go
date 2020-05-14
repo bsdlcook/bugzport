@@ -17,7 +17,8 @@ func init() {
 	buildCmd.Flags().StringP("tree", "t", cfg.Tree, "Target ports tree")
 	buildCmd.Flags().BoolP("report", "r", false, "Generate a report once finished building")
 	buildCmd.Flags().BoolP("output", "o", false, "Show running output of Poudriere build process")
-	buildCmd.Flags().BoolP("interactive", "i", false, "Start an interactive shell inside the builder once built")
+	buildCmd.Flags().BoolP("interactive", "i", false, "Start an interactive shell inside the builder once built (implies -o)")
+	buildCmd.Flags().BoolP("config", "c", false, "Configure port options before build. (implies -o)")
 }
 
 var buildCmd = &cobra.Command{
@@ -65,10 +66,12 @@ func poudriereJob(cmd *cobra.Command, args []string) (poudriere.Job, error) {
 	output := getBool(cmd, "output")
 	report := getBool(cmd, "report")
 	interactive := getBool(cmd, "interactive")
+	config := getBool(cmd, "config")
 	options := &poudriere.OptionsT{
 		Output:      output,
 		Report:      report,
 		Interactive: interactive,
+		Config:      config,
 	}
 
 	return poudriere.Job{
