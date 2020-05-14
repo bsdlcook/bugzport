@@ -63,16 +63,7 @@ func poudriereJob(cmd *cobra.Command, args []string) (poudriere.Job, error) {
 		return poudriere.Job{}, err
 	}
 
-	output := getBool(cmd, "output")
-	report := getBool(cmd, "report")
-	interactive := getBool(cmd, "interactive")
-	config := getBool(cmd, "config")
-	options := &poudriere.OptionsT{
-		Output:      output,
-		Report:      report,
-		Interactive: interactive,
-		Config:      config,
-	}
+	options := getOptions(cmd)
 
 	return poudriere.Job{
 		Jail:    jail,
@@ -91,4 +82,13 @@ func getBool(cmd *cobra.Command, value string) bool {
 func getString(cmd *cobra.Command, value string) string {
 	val, _ := cmd.Flags().GetString(value)
 	return val
+}
+
+func getOptions(cmd *cobra.Command) *poudriere.OptionsT {
+	return &poudriere.OptionsT{
+		Output:      getBool(cmd, "output"),
+		Report:      getBool(cmd, "report"),
+		Interactive: getBool(cmd, "interactive"),
+		Config:      getBool(cmd, "config"),
+	}
 }
