@@ -11,7 +11,11 @@ import (
 func init() {
 	RootCmd.AddCommand(buildCmd)
 
-	cfg, _ := config.Get()
+	cfg, err := config.Get()
+	if err != nil {
+		panic(err)
+	}
+
 	buildCmd.Flags().StringP("dir", "d", cfg.Dir, "Target ports directory")
 	buildCmd.Flags().StringP("jail", "j", cfg.Jail, "Target jail")
 	buildCmd.Flags().StringP("tree", "t", cfg.Tree, "Target ports tree")

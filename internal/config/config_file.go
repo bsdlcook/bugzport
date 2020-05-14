@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -10,36 +11,60 @@ import (
 )
 
 const (
-	defaultConfigName = "bugz.yml"
+	defaultConfigName = "config.yml"
 	defaultConfigDir  = "bugzport"
 )
 
 type Config struct {
-	Dir  string `yaml:"dir"`
-	Jail string `yaml:"jail"`
-	Tree string `yaml:"tree"`
+	Dir  string `yaml:"poud_port_dir"`
+	Jail string `yaml:"poud_jail"`
+	Tree string `yaml:"poud_tree"`
 }
 
-func ParseConfig(name string) (Config, error) {
-	config, err := parseConfigFile(name)
+func ParseConfig() (Config, error) {
+	config, err := parseConfigFile()
 	if err != nil {
-		return Config{}, nil
+		return Config{}, err
 	}
 
 	return config, nil
 }
 
-func dirPath() string {
-	dir, _ := homedir.Expand("~/.config/" + defaultConfigDir)
-	return dir
+func dirPaths() []string {
+	homeDir, _ := homedir.Expand("~/.config/" + defaultConfigDir)
+	globalDir := "/usr/local/etc/" + defaultConfigDir
+	return []string{homeDir, globalDir}
 }
 
-func filePath() string {
-	return path.Join(dirPath(), defaultConfigName)
+func configPath() (string, error) {
+	var paths []string
+	for _, configPath := range dirPaths() {
+		paths = append(paths, path.Join(configPath, defaultConfigName))
+	}
+
+	var config string
+	for _, configFile := range paths {
+		_, err := os.Stat(configFile)
+		if !os.IsNotExist(err) {
+			config = configFile
+			break
+		}
+	}
+
+	if config == "" {
+		return "", fmt.Errorf("could not find bugzport configuration '%s' file in path(s) %s", defaultConfigName, dirPaths())
+	}
+
+	return config, nil
 }
 
-func readConfigFile(name string) ([]byte, error) {
-	file, err := os.Open(name)
+func readConfigFile() ([]byte, error) {
+	configFile, err := configPath()
+	if err != nil {
+		return nil, err
+	}
+
+	file, err := os.Open(configFile)
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +78,8 @@ func readConfigFile(name string) ([]byte, error) {
 	return data, nil
 }
 
-func parseConfigFile(name string) (Config, error) {
-	data, err := readConfigFile(name)
+func parseConfigFile() (Config, error) {
+	data, err := readConfigFile()
 	if err != nil {
 		return Config{}, err
 	}
@@ -66,5 +91,5 @@ func parseConfigFile(name string) (Config, error) {
 		return Config{}, err
 	}
 
-	return config, err
+	return config, nil
 }
