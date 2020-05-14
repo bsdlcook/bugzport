@@ -29,13 +29,7 @@ func JailFromName(jail, tree string) (*JailT, error) {
 		return &JailT{}, err
 	}
 
-	paths := &PathT{
-		LogDir:     getPath(poudriereLogDir, info, tree),
-		CacheDir:   getPath(poudriereCacheDir, info, tree),
-		ImageDir:   getPath(poudriereImageDir, info, tree),
-		PackageDir: getPath(poudrierePackageDir, info, tree),
-		WorkDir:    getPath(poudriereWorkDir, info, tree),
-	}
+	paths := getPaths(info, tree)
 
 	return &JailT{
 		Name:    info["name"],
@@ -71,6 +65,16 @@ func readJail(jail string) (map[string]string, error) {
 	return info, nil
 }
 
-func getPath(path string, info map[string]string, tree string) string {
+func getPaths(info map[string]string, tree string) *PathT {
+	return &PathT{
+		LogDir:     fmtPath(poudriereLogDir, info, tree),
+		CacheDir:   fmtPath(poudriereCacheDir, info, tree),
+		ImageDir:   fmtPath(poudriereImageDir, info, tree),
+		PackageDir: fmtPath(poudrierePackageDir, info, tree),
+		WorkDir:    fmtPath(poudriereWorkDir, info, tree),
+	}
+}
+
+func fmtPath(path string, info map[string]string, tree string) string {
 	return fmt.Sprintf("%s/%s-%s", path, info["name"], tree)
 }
