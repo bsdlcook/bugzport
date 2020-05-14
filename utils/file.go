@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func CopyFile(source string, destination string) {
+func CopyFile(source, destination string) {
 	sourceFile, _ := os.Open(source)
 	defer sourceFile.Close()
 

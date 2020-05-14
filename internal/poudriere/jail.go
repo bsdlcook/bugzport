@@ -23,7 +23,7 @@ type JailT struct {
 	Path    *PathT
 }
 
-func JailFromName(jail string, tree string) (*JailT, error) {
+func JailFromName(jail, tree string) (*JailT, error) {
 	info, err := readJail(jail)
 	if err != nil {
 		return &JailT{}, err

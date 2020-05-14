@@ -75,7 +75,7 @@ func isPort(dir string) error {
 	return nil
 }
 
-func makeVar(dir string, value string) string {
+func makeVar(dir, value string) string {
 	cmd, _ := exec.Command("make", "-V", value, "-C", dir).Output()
 	return strings.Trim(string(cmd), "\n")
 }
