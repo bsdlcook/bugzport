@@ -10,7 +10,7 @@ import (
 )
 
 func (j *Job) Run() {
-	svn := svn.New(j.Port.Name, j.Port.FullName(), j.Port.Version, j.WorkDir)
+	svn := svn.New(j.Port, j.WorkDir)
 	build := buildStatus(j)
 	buildFlags := []string{"-j", j.Jail.Name, "-p", j.Tree, j.Port.FullName()}
 

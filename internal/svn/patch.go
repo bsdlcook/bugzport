@@ -10,8 +10,8 @@ const (
 )
 
 func (s *SvnInfo) WritePatch() {
-	patchDir := fmt.Sprintf("%s%s/%s-%s/", s.WorkDir, defaultReportDir, s.PortName, s.PortVersion)
-	patchFile := fmt.Sprintf("%s-%s.diff", s.PortName, s.PortVersion)
+	patchDir := fmt.Sprintf("%s%s/%s-%s/", s.WorkDir, defaultReportDir, s.Port.Name, s.Port.Version)
+	patchFile := fmt.Sprintf("%s-%s.diff", s.Port.Name, s.Port.Version)
 
 	file, _ := os.Create(patchDir + patchFile)
 	defer file.Close()
@@ -20,7 +20,7 @@ func (s *SvnInfo) WritePatch() {
 }
 
 func (s *SvnInfo) generatePatch() string {
-	diff := svnCmd("diff", s.PortPath)
+	diff := svnCmd("diff", s.Port.FullName())
 	diff.Dir = s.WorkDir
 	out, _ := diff.Output()
 

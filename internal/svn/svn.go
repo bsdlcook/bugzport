@@ -2,21 +2,19 @@ package svn
 
 import (
 	"os/exec"
+
+	"gitlab.com/lcook/bugzport/internal/port"
 )
 
 type SvnInfo struct {
-	PortName    string
-	PortPath    string
-	PortVersion string
-	WorkDir     string
+	Port    *port.Port
+	WorkDir string
 }
 
-func New(port string, path string, version string, dir string) *SvnInfo {
+func New(port *port.Port, dir string) *SvnInfo {
 	return &SvnInfo{
-		PortName:    port,
-		PortPath:    path,
-		PortVersion: version,
-		WorkDir:     dir,
+		Port:    port,
+		WorkDir: dir,
 	}
 }
 
