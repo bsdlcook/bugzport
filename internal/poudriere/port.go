@@ -29,34 +29,34 @@ const (
 	cargoUse = "cargo"
 )
 
-type RepoT struct {
+type Repo struct {
 	Account string
 	Project string
 	Type    int
 }
 
-type PortT struct {
+type Port struct {
 	Name        string
 	Version     string
 	DistVersion string
 	Category    string
 	Maintainer  string
-	Repo        *RepoT
+	Repo        *Repo
 	Uses        int
 }
 
-func (p *PortT) FullName() string {
+func (p *Port) FullName() string {
 	return fmt.Sprintf("%s/%s", p.Category, p.Name)
 }
 
-func PortFromName(dir string) (*PortT, error) {
+func PortFromName(dir string) (*Port, error) {
 	valid := isPort(dir)
 
 	if valid != nil {
-		return &PortT{}, valid
+		return &Port{}, valid
 	}
 
-	return &PortT{
+	return &Port{
 		Name:        makeVar(dir, "PORTNAME"),
 		Version:     makeVar(dir, "PORTVERSION"),
 		DistVersion: makeVar(dir, "DISTVERSIONFULL"),
@@ -80,22 +80,22 @@ func makeVar(dir, value string) string {
 	return strings.Trim(string(cmd), "\n")
 }
 
-func repoInfo(dir string) *RepoT {
+func repoInfo(dir string) *Repo {
 	if makeVar(dir, githubUse) != "" {
-		return &RepoT{
+		return &Repo{
 			makeVar(dir, githubAccount),
 			makeVar(dir, githubProject),
 			github,
 		}
 	} else if makeVar(dir, gitlabUse) != "" {
-		return &RepoT{
+		return &Repo{
 			makeVar(dir, gitlabAccount),
 			makeVar(dir, gitlabProject),
 			gitlab,
 		}
 	}
 
-	return &RepoT{}
+	return &Repo{}
 }
 
 func usesInfo(dir string) int {

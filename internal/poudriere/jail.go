@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type PathT struct {
+type Path struct {
 	LogDir     string
 	CacheDir   string
 	ImageDir   string
@@ -13,25 +13,25 @@ type PathT struct {
 	WorkDir    string
 }
 
-type JailT struct {
+type Jail struct {
 	Name    string
 	Version string
 	Arch    string
 	Method  string
 	Mount   string
 	FS      string
-	Path    *PathT
+	Path    *Path
 }
 
-func JailFromName(jail, tree string) (*JailT, error) {
+func JailFromName(jail, tree string) (*Jail, error) {
 	info, err := readJail(jail)
 	if err != nil {
-		return &JailT{}, err
+		return &Jail{}, err
 	}
 
 	paths := getPaths(info, tree)
 
-	return &JailT{
+	return &Jail{
 		Name:    info["name"],
 		Version: info["version"],
 		Arch:    info["arch"],
@@ -65,8 +65,8 @@ func readJail(jail string) (map[string]string, error) {
 	return info, nil
 }
 
-func getPaths(info map[string]string, tree string) *PathT {
-	return &PathT{
+func getPaths(info map[string]string, tree string) *Path {
+	return &Path{
 		LogDir:     fmtPath(poudriereLogDir, info, tree),
 		CacheDir:   fmtPath(poudriereCacheDir, info, tree),
 		ImageDir:   fmtPath(poudriereImageDir, info, tree),

@@ -88,8 +88,8 @@ func getString(cmd *cobra.Command, value string) string {
 	return val
 }
 
-func getOptions(cmd *cobra.Command) *poudriere.OptionsT {
-	return &poudriere.OptionsT{
+func getOptions(cmd *cobra.Command) *poudriere.Options {
+	return &poudriere.Options{
 		Output:      getBool(cmd, "output"),
 		Report:      getBool(cmd, "report"),
 		Interactive: getBool(cmd, "interactive"),

@@ -9,7 +9,7 @@ import (
 	"gitlab.com/lcook/bugzport/utils"
 )
 
-type OptionsT struct {
+type Options struct {
 	Output      bool
 	Report      bool
 	Interactive bool
@@ -17,11 +17,11 @@ type OptionsT struct {
 }
 
 type Job struct {
-	Jail    *JailT
-	Port    *PortT
+	Jail    *Jail
+	Port    *Port
 	Tree    string
 	WorkDir string
-	Options *OptionsT
+	Options *Options
 }
 
 func (j *Job) Run() {

@@ -21,7 +21,7 @@ func WriteReport(j *Job) {
 	file.WriteString(generateReport(j.Port))
 }
 
-func generateReport(p *PortT) string {
+func generateReport(p *Port) string {
 	report := fmt.Sprintf(`%s: Update to %s
 
 Amended:
@@ -38,7 +38,7 @@ Tested:
 	return report
 }
 
-func changelog(p *PortT) string {
+func changelog(p *Port) string {
 	switch p.Repo.Type {
 	case github:
 		return fmt.Sprintf("https://github.com/%s/%s/releases/%s", p.Repo.Account, p.Repo.Project, p.DistVersion)
@@ -49,7 +49,7 @@ func changelog(p *PortT) string {
 	}
 }
 
-func uses(p *PortT) string {
+func uses(p *Port) string {
 	switch p.Uses {
 	case gomod:
 		return "* Updated *_TUPLE dependency list."
