@@ -26,7 +26,7 @@ func FromName(jail, tree string) (*Jail, error) {
 }
 
 func readJail(jail string) (map[string]string, error) {
-	out, err := exec.Command("poudriere jail -j " + jail + " -i").Output()
+	out, err := exec.Command("poudriere", []string{"jail", "-j", jail, "-i"}...).Output()
 
 	if err != nil {
 		return nil, fmt.Errorf("no such jail '%s' found in Poudriere. Is the jail name correct?", jail)
