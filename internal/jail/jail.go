@@ -1,29 +1,12 @@
-package poudriere
+package jail
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 )
 
-type Path struct {
-	LogDir     string
-	CacheDir   string
-	ImageDir   string
-	PackageDir string
-	WorkDir    string
-}
-
-type Jail struct {
-	Name    string
-	Version string
-	Arch    string
-	Method  string
-	Mount   string
-	FS      string
-	Path    *Path
-}
-
-func JailFromName(jail, tree string) (*Jail, error) {
+func FromName(jail, tree string) (*Jail, error) {
 	info, err := readJail(jail)
 	if err != nil {
 		return &Jail{}, err
@@ -43,7 +26,7 @@ func JailFromName(jail, tree string) (*Jail, error) {
 }
 
 func readJail(jail string) (map[string]string, error) {
-	out, err := poudriereCmd([]string{"jail", "-j", jail, "-i"}).Output()
+	out, err := exec.Command("poudriere jail -j " + jail + " -i").Output()
 
 	if err != nil {
 		return nil, fmt.Errorf("no such jail '%s' found in Poudriere. Is the jail name correct?", jail)
@@ -67,11 +50,11 @@ func readJail(jail string) (map[string]string, error) {
 
 func getPaths(info map[string]string, tree string) *Path {
 	return &Path{
-		LogDir:     fmtPath(poudriereLogDir, info, tree),
-		CacheDir:   fmtPath(poudriereCacheDir, info, tree),
-		ImageDir:   fmtPath(poudriereImageDir, info, tree),
-		PackageDir: fmtPath(poudrierePackageDir, info, tree),
-		WorkDir:    fmtPath(poudriereWorkDir, info, tree),
+		LogDir:     fmtPath(jailLogDir, info, tree),
+		CacheDir:   fmtPath(jailCacheDir, info, tree),
+		ImageDir:   fmtPath(jailImageDir, info, tree),
+		PackageDir: fmtPath(jailPackageDir, info, tree),
+		WorkDir:    fmtPath(jailWorkDir, info, tree),
 	}
 }
 

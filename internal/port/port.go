@@ -1,4 +1,4 @@
-package poudriere
+package port
 
 import (
 	"fmt"
@@ -7,49 +7,11 @@ import (
 	"strings"
 )
 
-const (
-	github int = iota
-	gitlab
-
-	githubUse string = "USE_GITHUB"
-	gitlabUse string = "USE_GITLAB"
-
-	githubAccount string = "GH_ACCOUNT"
-	githubProject string = "GH_PROJECT"
-
-	gitlabAccount string = "GL_ACCOUNT"
-	gitlabProject string = "GL_PROJECT"
-)
-
-const (
-	gomod int = iota
-	cargo
-
-	gomodUse = "go:modules"
-	cargoUse = "cargo"
-)
-
-type Repo struct {
-	Account string
-	Project string
-	Type    int
-}
-
-type Port struct {
-	Name        string
-	Version     string
-	DistVersion string
-	Category    string
-	Maintainer  string
-	Repo        *Repo
-	Uses        int
-}
-
 func (p *Port) FullName() string {
 	return fmt.Sprintf("%s/%s", p.Category, p.Name)
 }
 
-func PortFromName(dir string) (*Port, error) {
+func FromName(dir string) (*Port, error) {
 	valid := isPort(dir)
 
 	if valid != nil {
@@ -85,13 +47,13 @@ func repoInfo(dir string) *Repo {
 		return &Repo{
 			makeVar(dir, githubAccount),
 			makeVar(dir, githubProject),
-			github,
+			Github,
 		}
 	} else if makeVar(dir, gitlabUse) != "" {
 		return &Repo{
 			makeVar(dir, gitlabAccount),
 			makeVar(dir, gitlabProject),
-			gitlab,
+			Gitlab,
 		}
 	}
 
@@ -104,9 +66,9 @@ func usesInfo(dir string) int {
 	for _, use := range strings.Fields(uses) {
 		switch use {
 		case gomodUse:
-			return gomod
+			return Gomod
 		case cargoUse:
-			return cargo
+			return Cargo
 		}
 	}
 

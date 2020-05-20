@@ -5,17 +5,6 @@ import (
 	"strings"
 )
 
-const (
-	poudrierePrefix  string = "/usr/local/poudriere"
-	poudriereDataDir string = poudrierePrefix + "/data"
-
-	poudriereLogDir     string = poudriereDataDir + "/logs/bulk"
-	poudriereCacheDir   string = poudriereDataDir + "/cache"
-	poudriereImageDir   string = poudriereDataDir + "/images"
-	poudrierePackageDir string = poudriereDataDir + "/packages"
-	poudriereWorkDir    string = poudriereDataDir + "/wrkdirs"
-)
-
 func poudriereCmd(args []string) *exec.Cmd {
 	return exec.Command("poudriere", args...)
 }

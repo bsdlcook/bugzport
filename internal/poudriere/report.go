@@ -3,6 +3,8 @@ package poudriere
 import (
 	"fmt"
 	"os"
+
+	"gitlab.com/lcook/bugzport/internal/port"
 )
 
 const (
@@ -21,7 +23,7 @@ func WriteReport(j *Job) {
 	file.WriteString(generateReport(j.Port))
 }
 
-func generateReport(p *Port) string {
+func generateReport(p *port.Port) string {
 	report := fmt.Sprintf(`%s: Update to %s
 
 Amended:
@@ -38,22 +40,22 @@ Tested:
 	return report
 }
 
-func changelog(p *Port) string {
+func changelog(p *port.Port) string {
 	switch p.Repo.Type {
-	case github:
+	case port.Github:
 		return fmt.Sprintf("https://github.com/%s/%s/releases/%s", p.Repo.Account, p.Repo.Project, p.DistVersion)
-	case gitlab:
+	case port.Gitlab:
 		return fmt.Sprintf("https://gitlab.com/%s/%s/-/tags/%s", p.Repo.Account, p.Repo.Project, p.DistVersion)
 	default:
 		return "[change me]"
 	}
 }
 
-func uses(p *Port) string {
+func uses(p *port.Port) string {
 	switch p.Uses {
-	case gomod:
+	case port.Gomod:
 		return "* Updated *_TUPLE dependency list."
-	case cargo:
+	case port.Cargo:
 		return "* Updated CARGO_CRATES dependency list."
 	default:
 		return ""

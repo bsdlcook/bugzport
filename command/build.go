@@ -5,6 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"gitlab.com/lcook/bugzport/internal/config"
+	"gitlab.com/lcook/bugzport/internal/jail"
+	"gitlab.com/lcook/bugzport/internal/port"
 	"gitlab.com/lcook/bugzport/internal/poudriere"
 )
 
@@ -57,12 +59,12 @@ func poudriereJob(cmd *cobra.Command, args []string) (poudriere.Job, error) {
 	jailName := getString(cmd, "jail")
 	treeName := getString(cmd, "tree")
 
-	jail, err := poudriere.JailFromName(jailName, treeName)
+	jail, err := jail.FromName(jailName, treeName)
 	if err != nil {
 		return poudriere.Job{}, err
 	}
 
-	port, err := poudriere.PortFromName(dirName + portName)
+	port, err := port.FromName(dirName + portName)
 	if err != nil {
 		return poudriere.Job{}, err
 	}

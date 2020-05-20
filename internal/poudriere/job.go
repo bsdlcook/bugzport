@@ -9,21 +9,6 @@ import (
 	"gitlab.com/lcook/bugzport/utils"
 )
 
-type Options struct {
-	Output      bool
-	Report      bool
-	Interactive bool
-	Config      bool
-}
-
-type Job struct {
-	Jail    *Jail
-	Port    *Port
-	Tree    string
-	WorkDir string
-	Options *Options
-}
-
 func (j *Job) Run() {
 	svn := svn.New(j.Port.Name, j.Port.FullName(), j.Port.Version, j.WorkDir)
 	build := buildStatus(j)
