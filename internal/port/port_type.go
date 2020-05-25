@@ -1,7 +1,7 @@
 package port
 
 const (
-	Github int = iota
+	Github int = iota + 1
 	Gitlab
 
 	githubUse string = "USE_GITHUB"
