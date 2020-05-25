@@ -18,14 +18,20 @@ func FromName(dir string) (*Port, error) {
 		return &Port{}, valid
 	}
 
+	portName := makeVar(dir, "PORTNAME")
+	if strings.Contains(makeVar(dir, "USES"), "python") {
+		portName = "py-" + portName
+	}
+
 	return &Port{
-		Name:        makeVar(dir, "PORTNAME"),
+		Name:        portName,
 		Version:     makeVar(dir, "PORTVERSION"),
 		DistVersion: makeVar(dir, "DISTVERSIONFULL"),
 		Category:    makeVar(dir, "CATEGORIES"),
 		Maintainer:  makeVar(dir, "MAINTAINER"),
 		Repo:        repoInfo(dir),
 		Uses:        usesInfo(dir),
+		Meta:        &Meta{LogName: makeVar(dir, "PKGNAME") + ".log"},
 	}, nil
 }
 
@@ -39,7 +45,9 @@ func isPort(dir string) error {
 
 func makeVar(dir, value string) string {
 	cmd, _ := exec.Command("make", "-V", value, "-C", dir).Output()
-	return strings.Trim(string(cmd), "\n")
+	output := strings.Trim(string(cmd), "\n")
+
+	return strings.Split(output, " ")[0]
 }
 
 func repoInfo(dir string) *Repo {

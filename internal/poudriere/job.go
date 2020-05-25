@@ -56,7 +56,7 @@ func buildStatus(j *Job) utils.SpinMessage {
 
 `, j.Jail.Version, j.Jail.Arch, j.Jail.Method, j.Jail.Mount))
 
-	buildMessage := fmt.Sprintf(" Building package %s/%s @ %s <%s>", j.Port.Category, j.Port.Name, j.Port.Version, j.Port.Maintainer)
+	buildMessage := fmt.Sprintf(" Building package %s @ %s <%s>", j.Port.FullName(), j.Port.Version, j.Port.Maintainer)
 	buildStatus := utils.Spinner(buildMessage)
 
 	if j.Options.Output || j.Options.Interactive || j.Options.Config {
@@ -67,7 +67,7 @@ func buildStatus(j *Job) utils.SpinMessage {
 }
 
 func portLogFile(j *Job) string {
-	return fmt.Sprintf("%s/latest/logs/%s-%s.log", j.Jail.Path.LogDir, j.Port.Name, j.Port.Version)
+	return fmt.Sprintf("%s/latest/logs/%s", j.Jail.Path.LogDir, j.Port.Meta.LogName)
 }
 
 func reportLogFile(j *Job) string {

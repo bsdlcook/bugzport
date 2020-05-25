@@ -28,6 +28,10 @@ type Repo struct {
 	Type    int
 }
 
+type Meta struct {
+	LogName string
+}
+
 type Port struct {
 	Name        string
 	Version     string
@@ -36,4 +40,5 @@ type Port struct {
 	Maintainer  string
 	Repo        *Repo
 	Uses        int
+	Meta        *Meta
 }
