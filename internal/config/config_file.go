@@ -33,11 +33,12 @@ func ParseConfig() (Config, error) {
 func dirPaths() []string {
 	homeDir, _ := homedir.Expand("~/.config/" + defaultConfigDir)
 	globalDir := "/usr/local/etc/" + defaultConfigDir
+
 	return []string{homeDir, globalDir}
 }
 
 func configPath() (string, error) {
-	var paths []string
+	paths := []string{}
 	for _, configPath := range dirPaths() {
 		paths = append(paths, path.Join(configPath, defaultConfigName))
 	}
