@@ -30,6 +30,7 @@ func (j *Job) Run() {
 	if j.Options.Output || j.Options.Interactive || j.Options.Config {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+
 		if j.Options.Interactive {
 			cmd.Stdin = os.Stdin
 		}
@@ -47,14 +48,14 @@ func (j *Job) Run() {
 }
 
 func buildStatus(j *Job) utils.SpinMessage {
-	fmt.Print(fmt.Sprintf(`Builder environment:
+	fmt.Printf(`Builder environment:
 
 	Version		-- %s
 	Arch		-- %s
 	Method		-- %s
 	Mount		-- %s
 
-`, j.Jail.Version, j.Jail.Arch, j.Jail.Method, j.Jail.Mount))
+`, j.Jail.Version, j.Jail.Arch, j.Jail.Method, j.Jail.Mount)
 
 	buildMessage := fmt.Sprintf(" Building package %s @ %s <%s>", j.Port.FullName(), j.Port.Version, j.Port.Maintainer)
 	buildStatus := utils.Spinner(buildMessage)
