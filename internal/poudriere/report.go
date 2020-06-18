@@ -33,7 +33,7 @@ Changelog:
 QA:
 
  * portlint: OK (looks fine).
- * testport: OK (poudriere: <arch>).`, p.FullName(), p.Version, changelog(p), poudriereVersion())
+ * testport: OK (poudriere: <arch>).`, p.FullName(), p.Version, changelog(p))
 
 	return report
 }
