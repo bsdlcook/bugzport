@@ -26,16 +26,14 @@ func WriteReport(j *Job) {
 func generateReport(p *port.Port) string {
 	report := fmt.Sprintf(`%s: Update to %s
 
-Amended:
- * Bumped DISTVERSION to %s and updated distinfo.
- %s
-
 Changelog:
+
  * %s
 
-Tested:
+QA:
+
  * portlint: OK (looks fine).
- * testport: OK (poudriere: %s).`, p.FullName(), p.Version, p.Version, uses(p), changelog(p), poudriereVersion())
+ * testport: OK (poudriere: <arch>).`, p.FullName(), p.Version, changelog(p), poudriereVersion())
 
 	return report
 }
@@ -47,7 +45,7 @@ func changelog(p *port.Port) string {
 	case port.Gitlab:
 		return fmt.Sprintf("https://gitlab.com/%s/%s/-/tags/%s", p.Repo.Account, p.Repo.Project, p.DistVersion)
 	default:
-		return "[change me]"
+		return "<change me>"
 	}
 }
 
