@@ -20,11 +20,10 @@ func WriteReport(j *Job) {
 
 	defer file.Close()
 
-	file.WriteString(generateReport(j.Port))
+	file.WriteString(generateReport(j))
 }
 
-func generateReport(p *port.Port) string {
-	// TODO: Inlcude the builder version (e.g., 12.1-RELEASE) and architecture (.e.g., amd64, i386, etc).
+func generateReport(j *Job) string {
 	report := fmt.Sprintf(`%s: Update to %s
 
 Changelog:
@@ -34,7 +33,7 @@ Changelog:
 QA:
 
  * portlint: OK (looks fine).
- * testport: OK (poudriere: <versions>, <archs>).`, p.FullName(), p.Version, changelog(p))
+ * testport: OK (poudriere: %s, %s).`, j.Port.FullName(), j.Port.Version, changelog(j.Port), j.Jail.Version, j.Jail.Arch)
 
 	return report
 }
