@@ -1,0 +1,3 @@
+port_directory: /home/lcook/Development/ports/
+port_tree: devel
+jail: builder-amd64-121-rel

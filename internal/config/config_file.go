@@ -16,9 +16,9 @@ const (
 )
 
 type Config struct {
-	Dir  string `yaml:"poud_port_dir"`
-	Jail string `yaml:"poud_jail"`
-	Tree string `yaml:"poud_tree"`
+	Dir  string `yaml:"port_directory"`
+	Tree string `yaml:"port_tree"`
+	Jail string `yaml:"jail"`
 }
 
 func ParseConfig() (Config, error) {
