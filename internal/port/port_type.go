@@ -14,14 +14,6 @@ const (
 	gitlabProject string = "GL_PROJECT"
 )
 
-const (
-	Gomod int = iota
-	Cargo
-
-	gomodUse = "go:modules"
-	cargoUse = "cargo"
-)
-
 type Repo struct {
 	Account string
 	Project string
@@ -39,6 +31,5 @@ type Port struct {
 	Category    string
 	Maintainer  string
 	Repo        *Repo
-	Uses        int
 	Meta        *Meta
 }
