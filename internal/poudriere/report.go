@@ -33,7 +33,9 @@ Changelog:
 QA:
 
  * portlint: OK (looks fine).
- * testport: OK (poudriere: %s, %s).`, j.Port.FullName(), j.Port.Version, changelog(j.Port), j.Jail.Version, j.Jail.Arch)
+ * testport: OK (poudriere: %s, %s).
+
+MFH: <Yes/No> (<reason>, <merge to quarterly branch>).`, j.Port.FullName(), j.Port.Version, changelog(j.Port), j.Jail.Version, j.Jail.Arch)
 
 	return report
 }
