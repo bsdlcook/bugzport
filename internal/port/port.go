@@ -30,7 +30,6 @@ func FromName(dir string) (*Port, error) {
 		Category:    makeVar(dir, "CATEGORIES"),
 		Maintainer:  makeVar(dir, "MAINTAINER"),
 		Repo:        repoInfo(dir),
-		Uses:        usesInfo(dir),
 		Meta:        &Meta{LogName: makeVar(dir, "PKGNAME") + ".log"},
 	}, nil
 }
@@ -66,19 +65,4 @@ func repoInfo(dir string) *Repo {
 	}
 
 	return &Repo{}
-}
-
-func usesInfo(dir string) int {
-	uses := makeVar(dir, "USES")
-
-	for _, use := range strings.Fields(uses) {
-		switch use {
-		case gomodUse:
-			return Gomod
-		case cargoUse:
-			return Cargo
-		}
-	}
-
-	return -1
 }
