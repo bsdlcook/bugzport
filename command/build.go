@@ -1,8 +1,6 @@
 package command
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"gitlab.com/lcook/bugzport/internal/config"
 	"gitlab.com/lcook/bugzport/internal/jail"
@@ -24,7 +22,7 @@ func init() {
 	buildCmd.Flags().BoolP("report", "r", false, "Generate a report once finished building")
 	buildCmd.Flags().BoolP("output", "o", false, "Show running output of Poudriere build process")
 	buildCmd.Flags().BoolP("interactive", "i", false, "Start an interactive shell inside the builder once built (implies -o)")
-	buildCmd.Flags().BoolP("config", "c", false, "Configure port options before build. (implies -o)")
+	buildCmd.Flags().BoolP("config", "c", false, "Configure port options before build (implies -o)")
 }
 
 var buildCmd = &cobra.Command{
@@ -35,20 +33,17 @@ with a selected ports tree. You can use this to also generate
 a summary report (diff, build log and port summary) once the
 compliation process has finished. The report is a basis of what
 to upload on the FreeBSD bugzilla and will speed up the committing
-phase by following best practises.
+phase by following best practises.`,
+	Example: `  # builds port with selected jail (-j), path to the ports directory (-d)
+  # and uses 'devel' ports tree (-t)
+  $ bp build devel/gh -j amd64-121-rel -d /path/to/ports -t devel
 
-Examples:
-  $ bp build audio/spotify-tui -j builder-amd64-121-rel -d /path/to/ports -t default
-  $ bp build devel/gh -or  # Outputs build process and generates report
-  $ bp build misc/broot -i # Once build is complete drop to interactive shell inside jail 
-`,
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
-			cmd.Help()
-			return fmt.Errorf("port is required as argument: <category/name>")
-		}
-		return nil
-	},
+  # outputs build process (-o) and generates report (-r)
+  $ bp build misc/broot -or
+
+  # drops to an interactive shell (-i) inside the jail
+  $ bp build lang/go -i`,
+	Args: cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		buildJob, err := poudriereJob(cmd, args)
 		if err != nil {
