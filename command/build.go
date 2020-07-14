@@ -29,11 +29,18 @@ func init() {
 
 var buildCmd = &cobra.Command{
 	Use:   "build <category/name> [flags]",
-	Short: "Queue a port for a build in Poudriere.",
-	Long: `Queue port for a build in Poudriere, generate a report and diff of the changes made.
+	Short: "Build a port from a selected ports tree.",
+	Long: `Trivially start the process of building a port in Poudriere
+with a selected ports tree. You can use this to also generate
+a summary report (diff, build log and port summary) once the
+compliation process has finished. The report is a basis of what
+to upload on the FreeBSD bugzilla and will speed up the committing
+phase by following best practises.
 
 Examples:
   $ bp build audio/spotify-tui -j builder-amd64-121-rel -d /path/to/ports -t default
+  $ bp build devel/gh -or  # Outputs build process and generates report
+  $ bp build misc/broot -i # Once build is complete drop to interactive shell inside jail 
 `,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
